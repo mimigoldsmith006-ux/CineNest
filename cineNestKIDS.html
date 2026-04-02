@@ -1,0 +1,469 @@
+<!DOCTYPE html> 
+<html> 
+    <head> 
+        <title>CineNest</title> 
+        <style> 
+* { margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: Arial, sans-serif; 
+} 
+
+body { 
+    min-height: 100vh; 
+    background: linear-gradient(to bottom, #ccdef8 40%, #fdbcc5 50%, rgb(254, 254, 194)100%);
+ } 
+ .navbar { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 20px 60px; 
+    background: linear-gradient(to right,rgb(253, 253, 222) 40%, #fdbcc5 50%, #ccdef8 100%); 
+    color: rgb(95, 15, 15); 
+    position:sticky; 
+    top:0; 
+    z-index:999; 
+} 
+.logo { 
+    font-size: 30px; 
+    font-weight: bold; 
+} 
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-links a { 
+    color: rgba(95, 15, 15, 0.8); 
+    text-decoration: none; 
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover { 
+    color: rgb(95, 15, 15);
+}
+ .hero { 
+    position: relative; 
+    width: 100%; 
+    height: 88vh; 
+}
+ .hero img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    display: block;
+ } 
+ .overlay { 
+    position: absolute; 
+    top: 0;
+     left: 0; 
+     width: 100%; 
+     height: 100%; 
+     background-color: rgba(0, 0, 0, 0.5); 
+    } 
+    .hero-content { 
+        position: absolute; 
+        top: 55%; 
+        left: 10%; 
+        transform: translateY(-50%); 
+        display: flex; 
+        align-items: center; 
+        gap: 50px; 
+        color: white; 
+    }
+     .hero-content a { 
+        text-decoration: none; 
+        color: white; 
+        cursor: pointer; 
+    }
+     .hero-content:hover { 
+        opacity: 0.9; 
+        transition: opacity 0.3s ease; 
+    }
+     .movie-card img { 
+        width: 250px; 
+        border-radius: 15px; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
+    }
+     .movie-info h1 { 
+        font-size: 60px; 
+        margin: 10px 0; 
+    }
+     .movie-info p { 
+        margin: 8px 0; 
+        font-size: 18px; 
+    }
+     .description { 
+        max-width: 500px; 
+        line-height: 1.6; 
+    }
+     h1{ 
+        color:rgb(74, 0, 46); 
+        margin-left:40px; 
+        margin-top:40px; 
+    }
+     .carousel-container { 
+        position: relative; 
+    }
+     .movie-row { 
+        display: flex; 
+        gap: 60px; 
+        padding: 20px 40px; 
+        overflow-x: auto; 
+        scroll-behavior: smooth; 
+        position: relative; 
+    }
+     .movie-row::-webkit-scrollbar { 
+        display: none; 
+    }
+     .movie-item { 
+        position: relative; 
+        width: 220px; 
+        height: 330px; 
+        flex-shrink: 0; 
+        border-radius: 10px; 
+        overflow: visible; 
+        transition: transform 0.3s ease, z-index 0.3s ease;
+     }
+      .movie-item img { 
+        width: 100%; 
+        height: 100%; 
+        object-fit: cover; 
+        border-radius: 10px; 
+        transition: transform 0.3s ease; 
+    }
+     .movie-item img:hover { 
+        transform: scale(1.1); 
+    }
+     .scroll-btn, .scroll-left { 
+        position: absolute; 
+        top: 50%; 
+        transform: translateY(-50%); 
+        background: rgba(255,255,255,0.15); 
+        color: white; 
+        border: 2px solid rgba(255,255,255,0.4); 
+        font-size: 22px; 
+        width: 45px; 
+        height: 45px; 
+        border-radius: 50%; 
+        cursor: pointer; 
+        z-index: 10; 
+        transition: all 0.3s ease; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        backdrop-filter: blur(4px); 
+    }
+     .scroll-btn { 
+        right: 10px; 
+    }
+     .scroll-left { 
+        left: 10px; 
+    }
+     .scroll-btn:hover, .scroll-left:hover { 
+        background: rgba(255,255,255,0.35); 
+        border-color: white; 
+        transform: translateY(-50%) scale(1.1); 
+    }
+     .nav-links {
+    display: flex;
+    align-items: center;
+}
+.user-menu { 
+    position: relative; 
+    display: inline-flex;
+    align-items: center;
+    margin-left: 30px; 
+}
+#activeUserIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgb(95, 15, 15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+#activeUserIcon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+     .dropdown{ 
+        display:none; 
+        position:absolute; 
+        right:0; top:50px; 
+        background:white; 
+        border-radius:8px; 
+        padding:10px; 
+        min-width:160px; 
+        z-index:1000; 
+    }
+     .dropdown.show{ 
+        display:block; 
+    }
+     .dropdown-item{ 
+        display:flex; 
+        align-items:center; 
+        gap:10px; 
+        padding:8px 10px; 
+        cursor:pointer; 
+        border-radius:5px; 
+    }
+     .dropdown-item:last-child{ 
+        margin-top:5px; 
+        border-top:1px solid #ddd; 
+        padding-top:10px; 
+    }
+     .dropdown-item:hover{ 
+        background:#eee; 
+    }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+    <div class="logo">CineNest</div>
+
+    <div class="nav-links">
+            <a href="cineNestKIDS.html">Home</a>
+        <a href="cinenestKIDSLIST.html">My List</a>
+
+        <div class="user-menu">
+            <div id="activeUserIcon" onclick="toggleDropdown()"></div>
+            <div class="dropdown" id="userDropdown"></div>
+        </div>
+    </div>
+</div>
+
+    <div class="hero">
+        <img src="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\elio.jpg">
+        <div class="overlay"></div>
+        <a href="elio.html">
+
+        <div class="hero-content">
+            <div class="movie-card">
+                
+                <img src="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\elio2.jpg">
+            </div>
+
+            <div class="movie-info">
+                <p class="year">2025</p>
+                <h1>ELIO</h1>
+                <p>1h 39min</p>
+                <p>Family/Adventure</p>
+                <p class="description">
+                   Elio, an underdog with an active imagination, finds himself inadvertently beamed up to the Communiverse, an interplanetary organization with representatives from galaxies far and wide. Mistakenly identified as Earth's ambassador to the rest of the universe, he starts to form new bonds with eccentric aliens while discovering who he's truly meant to be.
+                </p>
+            </div>
+        </div>
+        </a>
+    </div>
+
+    <h1>&nbsp;&nbsp;Comedy</h1>
+    <div class="carousel-container">
+        <div class="movie-row" id="comedy">
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\monst.html">
+            <div class="movie-item"><img src="monst.jpg" alt=""></div></a>
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\minion.html">
+            <div class="movie-item"><img src="minion.jpg" alt=""></div></a>
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\lorax.html">
+            <div class="movie-item"><img src="lorax.jpg" alt=""></div></a>
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\shrek.html">
+            <div class="movie-item"><img src="shrek.jpg" alt=""></div></a>
+            <a href="daddycareLIST.html">
+            <div class="movie-item"><img src="daddycare.jpg" alt=""></div></a>
+            <a href="homeLIST.html">
+            <div class="movie-item"><img src="home.jpg" alt=""></div></a>
+            <a href="cloudyLIST.html">
+            <div class="movie-item"><img src="cloudy.jpg" alt=""></div></a>
+        </div>
+        <button class="scroll-left" onclick="scrollRowLeft('comedy')">❮</button>
+        <button class="scroll-btn" onclick="scrollRow('comedy')">❯</button>
+    </div>
+
+    <h1>&nbsp;&nbsp;Dramedies</h1>
+    <div class="carousel-container">
+        <div class="movie-row" id="dramadies">
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\annie.html">
+            <div class="movie-item"><img src="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\annie.jpg" alt=""></div></a>
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\timothy.html">
+            <div class="movie-item"><img src="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\timothy.jpg" alt=""></div></a>
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\muppet.html">
+            <div class="movie-item"><img src="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\muppet.jpg" alt=""></div></a>
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\wonder.html">
+            <div class="movie-item"><img src="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\wonder.jpg" alt=""></div></a>
+            <a href="wimpyLIST.html">
+            <div class="movie-item"><img src="wimpy.jpg" alt=""></div></a>
+            <a href="foxLIST.html">
+            <div class="movie-item"><img src="fox.jpg" alt=""></div></a>
+            <a href="mygirlLIST.html">
+            <div class="movie-item"><img src="mygirl.jpg" alt=""></div></a>
+        </div>
+        <button class="scroll-left" onclick="scrollRowLeft('dramedies')">❮</button>
+        <button class="scroll-btn" onclick="scrollRow('dramedies')">❯</button>
+    </div>
+
+    <h1>&nbsp;&nbsp;Adventure</h1>
+    <div class="carousel-container">
+        <div class="movie-row" id="adventure">
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\incredi.html">
+            <div class="movie-item"><img src="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\incredi.jpg" alt=""></div></a>
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\elio.html">
+            <div class="movie-item"><img src="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\elio2.jpg" alt=""></div></a>
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\dragon.html">
+            <div class="movie-item"><img src="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\dragon.jpg" alt=""></div></a>
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\troll.html">
+            <div class="movie-item"><img src="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\troll.jpg" alt=""></div></a>
+            <a href="braveLIST.html">
+            <div class="movie-item"><img src="brave.jpg" alt=""></div></a>
+            <a href="spiderLIST.html">
+            <div class="movie-item"><img src="spider.jpg" alt=""></div></a>
+            <a href="timeLIST.html">
+            <div class="movie-item"><img src="time.jpg" alt=""></div></a>
+        </div>
+        <button class="scroll-left" onclick="scrollRowLeft('adventure')">❮</button>
+        <button class="scroll-btn" onclick="scrollRow('adventure')">❯</button>
+    </div>
+
+    <h1>&nbsp;&nbsp;Musicals</h1>
+    <div class="carousel-container">
+        <div class="movie-row" id="musicals">
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\coco.html">
+            <div class="movie-item"><img src="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\coco.jpg" alt=""></div></a>
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\corpse.html">
+            <div class="movie-item"><img src="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\corpse.jpg" alt=""></div></a>
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\encanto.html">
+            <div class="movie-item"><img src="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\ecanto.jpg" alt=""></div></a>
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\wonka.html">
+            <div class="movie-item"><img src="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\wonka.jpg" alt=""></div></a>
+            <a href="matildaLIST.html">
+            <div class="movie-item"><img src="matilda.jpg" alt=""></div></a>
+            <a href="aladdinLIST.html">
+            <div class="movie-item"><img src="aladdin.jpg" alt=""></div></a>
+            <a href="alvinLIST.html">
+            <div class="movie-item"><img src="alvin.jpg" alt=""></div></a>
+        </div>
+        <button class="scroll-left" onclick="scrollRowLeft('musicals')">❮</button>
+        <button class="scroll-btn" onclick="scrollRow('musicals')">❯</button>
+    </div>
+<br></br> <br></br>
+<script>
+function scrollRow(id) {
+    document.getElementById(id).scrollBy({ left: 300, behavior: 'smooth' });
+}
+
+function scrollRowLeft(id) {
+    document.getElementById(id).scrollBy({ left: -300, behavior: 'smooth' });
+}
+
+function getUsers() {
+    return JSON.parse(localStorage.getItem('cinenest_users') || '[]');
+}
+
+function getActiveUser() {
+    const activeName = localStorage.getItem('activeUser');
+    const users = getUsers();
+    return users.find(u => u.name === activeName) || users[0] || null;
+}
+
+function makeAvatar(user, size) {
+    const img = document.createElement('img');
+    img.src = user.avatar || '';
+    img.alt = user.name;
+
+    img.style.width = size + "px";
+    img.style.height = size + "px";
+    img.style.borderRadius = "50%";
+    img.style.objectFit = "cover";
+    img.style.objectPosition = "center";
+
+    return img;
+}
+
+function updateNavbarIcon() {
+    const active = getActiveUser();
+    const container = document.getElementById('activeUserIcon');
+
+    container.innerHTML = '';
+
+    if (active) {
+        container.appendChild(makeAvatar(active, 36));
+    }
+}
+
+function buildDropdown(){
+    const users = getUsers();
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.innerHTML='';
+
+    users.forEach(user=>{
+        const item=document.createElement('div');
+        item.className='dropdown-item';
+        item.onclick=()=>switchUser(user.name);
+
+        item.appendChild(makeAvatar(user, 35));
+
+        const label=document.createElement('span');
+        label.textContent=user.name;
+        label.style.marginLeft='10px';
+
+        item.appendChild(label);
+        dropdown.appendChild(item);
+    });
+const manageUsers = document.createElement('div');
+manageUsers.className = 'dropdown-item';
+manageUsers.textContent = '👥 Users';
+manageUsers.onclick = () => window.location.href = 'cineNest.html';
+dropdown.appendChild(manageUsers);
+    const logout=document.createElement('div');
+    logout.className='dropdown-item';
+    logout.textContent='Logout';
+    logout.onclick=logoutUser;
+
+    dropdown.appendChild(logout);
+}
+
+function switchUser(name){
+    localStorage.setItem('activeUser',name);
+
+    const users = getUsers();
+    const user = users.find(u=>u.name===name);
+
+    window.location.href =
+        user && user.isChild ? 'cinenestKIDS.html' : 'cinenestMAIN.html';
+}
+
+function logoutUser(){
+    localStorage.removeItem('activeUser');
+    window.location.href="cinenestLOGOUT.html";
+}
+
+function toggleDropdown(){
+    document.getElementById('userDropdown').classList.toggle('show');
+}
+
+window.addEventListener('click',function(e){
+    if(!e.target.closest('.user-menu')){
+        document.getElementById('userDropdown').classList.remove('show');
+    }
+});
+
+window.onload = function(){
+    updateNavbarIcon();
+    buildDropdown();
+};
+</script>
+
+<button class="child-enter-btn" onclick="localStorage.setItem('activeUser', 'Kids'); window.location.href='cinenestKIDS.html'">🍿 Start Watching!</button>
+</body>
+</html>

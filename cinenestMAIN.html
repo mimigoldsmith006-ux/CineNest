@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CineNest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 80vh;
+            background: linear-gradient(to bottom, #000000, #700404);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background: linear-gradient(to right, #b30000, #4d0000);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            transition: transform 0.3s ease;
+        }
+
+        .logo {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: white;
+        }
+
+        .user-menu {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        #activeUserIcon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        #activeUserIcon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background: #1a1a1a;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 10px;
+            min-width: 160px;
+            z-index: 1000;
+        }
+
+        .dropdown.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 88vh;
+        }
+
+        .hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 55%;
+            left: 10%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            color: white;
+        }
+
+        .hero-content a {
+            text-decoration: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .hero-content:hover {
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .movie-card img {
+            width: 250px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        .movie-info h1 {
+            font-size: 60px;
+            margin: 10px 0;
+        }
+
+        .movie-info p {
+            margin: 8px 0;
+            font-size: 18px;
+        }
+
+        .description {
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: white;
+            margin-left: 40px;
+            margin-top: 40px;
+        }
+
+        .carousel-container {
+            position: relative;
+        }
+
+        .movie-row {
+            display: flex;
+            flex-direction: row;
+            gap: 60px;
+            padding: 20px 40px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+        }
+
+        .movie-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .movie-item {
+            position: relative;
+            width: 220px;
+            height: 330px;
+            flex-shrink: 0;
+            border-radius: 10px;
+            overflow: visible;
+            transition: transform 0.3s ease;
+        }
+
+        .movie-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .movie-item img:hover {
+            transform: scale(1.1);
+        }
+
+        .scroll-btn, .scroll-left {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 22px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .scroll-btn { right: 10px; }
+        .scroll-left { left: 10px; }
+
+        .scroll-btn:hover, .scroll-left:hover {
+            background: rgba(255,255,255,0.35);
+            border-color: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="logo">CineNest</div>
+        <div class="nav-links">
+            <a href="cinenestMAIN.html">Home</a>
+            <a href="cinenestMYLIST.html">My List</a>
+            <a href="cinenestContact.html">Contact Us</a>
+            <div class="user-menu">
+                <div id="activeUserIcon" onclick="toggleDropdown()"></div>
+                <div class="dropdown" id="userDropdown"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero">
+        <img src="mulancrop.jpg" alt="Mulan background">
+        <div class="overlay"></div>
+        <a href="mulanLIST.html">
+            <div class="hero-content">
+                <div class="movie-card">
+                    <img src="mulllaann.jpg" alt="Mulan poster">
+                </div>
+                <div class="movie-info">
+                    <p class="year">2020</p>
+                    <h1>MULAN</h1>
+                    <p>1h 55min</p>
+                    <p>Action</p>
+                    <p class="description">
+                        A fearless young woman disguises herself as a man to take her father's place in the Imperial Army. As she trains and fights to protect China from invading forces, Mulan must embrace her true strength and prove her courage, loyalty, and honor.
+                    </p>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <h1>Comedy</h1>
+    <div class="carousel-container">
+        <div class="movie-row" id="comedy">
+            <a href="chicksLIST.html"><div class="movie-item"><img src="whitechicks.jpg"></div></a>
+            <a href="meangirlLIST.html"><div class="movie-item"><img src="meangirls.jpg"></div></a>
+            <a href="9livesLIST.html"><div class="movie-item"><img src="assets/9lives.jpg"></div></a>
+            <a href="myboyLIST.html"><div class="movie-item"><img src="myboy.jpg"></div></a>
+            <a href="manbabyLIST.html"><div class="movie-item"><img src="manbaby.jpg"></div></a>
+            <a href="julieLIST.html"><div class="movie-item"><img src="julie.jpg"></div></a>
+            <a href="yesdayLIST.html"><div class="movie-item"><img src="yesday.jpg"></div></a>
+        </div>
+        <button class="scroll-left" onclick="scrollRowLeft('comedy')">❮</button>
+        <button class="scroll-btn" onclick="scrollRow('comedy')">❯</button>
+    </div>
+
+    <h1>Thriller</h1>
+    <div class="carousel-container">
+        <div class="movie-row" id="thriller">
+            <a href="gonegirlLIST.html"><div class="movie-item"><img src="gone.jpg"></div></a>
+            <a href="fallLIST.html"><div class="movie-item"><img src="fall.jpg"></div></a>
+            <a href="womanLIST.html"><div class="movie-item"><img src="woman.jpg"></div></a>
+            <a href="birdboxLIST.html"><div class="movie-item"><img src="bird.jpg"></div></a>
+            <a href="runLIST.html"><div class="movie-item"><img src="run.jpg"></div></a>
+            <a href="unlockedLIST.html"><div class="movie-item"><img src="unlocked.jpg"></div></a>
+            <a href="platformLIST.html"><div class="movie-item"><img src="platform.jpg"></div></a>
+        </div>
+        <button class="scroll-left" onclick="scrollRowLeft('thriller')">❮</button>
+        <button class="scroll-btn" onclick="scrollRow('thriller')">❯</button>
+    </div>
+
+    <h1>Mystery</h1>
+    <div class="carousel-container">
+        <div class="movie-row" id="mystery">
+            <a href="enolaLIST.html"><div class="movie-item"><img src="enola.jpg"></div></a>
+            <a href="thegirlLIST.html"><div class="movie-item"><img src="thegirl.jpg"></div></a>
+            <a href="glassLIST.html"><div class="movie-item"><img src="glass.jpg"></div></a>
+            <a href="mysteryLIST.html"><div class="movie-item"><img src="mystery.jpg"></div></a>
+            <a href="weaponsLIST.html"><div class="movie-item"><img src="weapons.jpg"></div></a>
+            <a href="luckyLIST.html"><div class="movie-item"><img src="lucky.jpg"></div></a>
+            <a href="oxfordLIST.html"><div class="movie-item"><img src="oxford.jpg"></div></a>
+        </div>
+        <button class="scroll-left" onclick="scrollRowLeft('mystery')">❮</button>
+        <button class="scroll-btn" onclick="scrollRow('mystery')">❯</button>
+    </div>
+
+    <h1>Disney</h1>
+    <div class="carousel-container">
+        <div class="movie-row" id="disney">
+            <a href="mulanLIST.html"><div class="movie-item"><img src="mulllaann.jpg"></div></a>
+            <a href="zootoLIST.html"><div class="movie-item"><img src="zooto.jpg"></div></a>
+            <a href="elementLIST.html"><div class="movie-item"><img src="element.jpg"></div></a>
+            <a href="redLIST.html"><div class="movie-item"><img src="red.jpg"></div></a>
+            <a href="cruellaLIST.html"><div class="movie-item"><img src="cruella.jpg"></div></a>
+            <a href="wishLIST.html"><div class="movie-item"><img src="wish.jpg"></div></a>
+            <a href="lucaLIST.html"><div class="movie-item"><img src="luca.jpg"></div></a>
+        </div>
+        <button class="scroll-left" onclick="scrollRowLeft('disney')">❮</button>
+        <button class="scroll-btn" onclick="scrollRow('disney')">❯</button>
+    </div>
+
+    <br><br>
+
+    <script>
+
+        function getUsers() {
+            return JSON.parse(localStorage.getItem('cinenest_users') || '[]');
+        }
+
+        function getActiveUser() {
+            const activeName = localStorage.getItem('activeUser');
+            const users = getUsers();
+            return users.find(u => u.name === activeName) || users[0] || null;
+        }
+
+        function makeAvatar(user, size) {
+            const img = document.createElement('img');
+            img.src = user.avatar || '';
+            img.alt = user.name;
+            img.style.cssText = `width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;object-position:center 10%;flex-shrink:0;`;
+            return img;
+        }
+
+        function updateNavbarIcon() {
+            const active = getActiveUser();
+            const container = document.getElementById('activeUserIcon');
+            container.innerHTML = '';
+            if (active) container.appendChild(makeAvatar(active, 40));
+        }
+
+        function buildDropdown() {
+            const users = getUsers();
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.innerHTML = '';
+
+            users.forEach(user => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                item.onclick = () => switchUser(user.name);
+                item.appendChild(makeAvatar(user, 35));
+                const label = document.createElement('span');
+                label.textContent = user.name;
+                item.appendChild(label);
+                dropdown.appendChild(item);
+            });
+
+            const divider = document.createElement('div');
+            divider.style.cssText = 'border-top:1px solid rgba(255,255,255,0.1);margin:6px 0;';
+            dropdown.appendChild(divider);
+
+            const manageUsers = document.createElement('div');
+            manageUsers.className = 'dropdown-item';
+            manageUsers.textContent = '👥 Users';
+manageUsers.onclick = () => window.location.href = 'cineNest.html';            dropdown.appendChild(manageUsers);
+
+            const logout = document.createElement('div');
+            logout.className = 'dropdown-item';
+            logout.textContent = 'Logout';
+            logout.onclick = () => {
+                localStorage.removeItem('activeUser');
+                window.location.href = 'cinenestLOGOUT.html';
+            };
+            dropdown.appendChild(logout);
+        }
+
+        function switchUser(name) {
+            localStorage.setItem('activeUser', name);
+            const users = getUsers();
+            const user = users.find(u => u.name === name);
+window.location.href = user && user.isChild ? 'cinenestKIDS.html' : 'cinenestMAIN.html';        }
+
+        function toggleDropdown() {
+            document.getElementById('userDropdown').classList.toggle('show');
+        }
+
+        window.addEventListener('click', function(e) {
+            if (!e.target.closest('.user-menu')) {
+                document.getElementById('userDropdown').classList.remove('show');
+            }
+        });
+
+        function scrollRow(id) {
+            document.getElementById(id).scrollBy({ left: 600, behavior: 'smooth' });
+        }
+
+        function scrollRowLeft(id) {
+            document.getElementById(id).scrollBy({ left: -600, behavior: 'smooth' });
+        }
+
+        let lastScroll = 0;
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', function() {
+            const currentScroll = window.scrollY;
+            if (currentScroll > lastScroll && currentScroll > 80) {
+                navbar.style.transform = 'translateY(-100%)';
+            } else {
+                navbar.style.transform = 'translateY(0)';
+            }
+            lastScroll = currentScroll;
+        });
+
+        window.addEventListener('load', function() {
+            updateNavbarIcon();
+            buildDropdown();
+        });
+
+    </script>
+
+</body>
+</html>

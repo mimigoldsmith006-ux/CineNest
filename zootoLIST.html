@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CineNest</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            background-color:black;
+        }
+
+        .navbar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:20px 60px;
+            background:linear-gradient(to right, #b30000, #4d0000);
+            color:white;
+        }
+
+        .logo{
+            font-size:30px;
+            font-weight:bold;
+        }
+
+        .nav-links a{
+            color:white;
+            text-decoration:none;
+            margin-left:30px;
+            font-size:18px;
+        }
+
+        .nav-links a:hover{
+            text-decoration:underline;
+        }
+
+
+        .movie-container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    padding: 80px 60px;
+    color: white;
+    width: 100%;
+        }
+
+        .movie-poster img{
+            width:300px;
+            border-radius:15px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        .movie-info{
+            max-width:500px;
+        }
+
+        .movie-info h1{
+            font-size:50px;
+            margin-bottom:15px;
+        }
+
+        .movie-info p{
+            font-size:18px;
+            margin-bottom:10px;
+            line-height:1.6;
+        }
+
+        .genre{
+            font-weight:bold;
+            color:#ffcccc;
+        }
+
+        .date{
+            font-weight:bold;
+            color:#ffcccc;
+        }
+
+        .time{
+            font-weight:bold;
+            color:#ffcccc;
+        }
+
+        .add-btn{
+    margin-top:20px;
+    padding:12px 25px;
+    font-size:16px;
+    background-color:#b30000;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.add-btn:hover{
+    background-color:#ff1a1a;
+    transform:scale(1.05);
+}
+.movie-review{
+            padding:20px 60px;
+            color:white;
+        }
+        .movie-review h1{
+            color:white;
+            font-size:36px;
+        }
+        .review-box{
+            background:#461e1ebe;
+            border:1px solid rgba(255,255,255,0.3);
+            border-radius:10px;
+            padding:20px;
+            margin:20px 60px;
+            color:white;
+        }
+        .hero {
+    position: relative;
+    width: 100%;
+    height: 590px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url("zooto2.jpg");
+    background-size: cover;
+    background-position: center;
+    opacity: 0.5;
+}
+.add-btn.done {
+    background-color: #2e7d32;
+    cursor: default;
+}	
+.nav-links {
+    display: flex;
+    align-items: center;
+}
+
+.user-menu {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 30px;
+}
+
+#activeUserIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid white; 
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+#activeUserIcon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 10px;
+    min-width: 160px;
+    z-index: 1000;
+}
+
+.dropdown.show { display: block; }
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.dropdown-item:hover { background: rgba(255,255,255,0.1); }
+
+
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="logo">CineNest</div>
+        <div class="nav-links">
+            <a href="cinenestMAIN.html">Home</a>
+            <a href="C:\Users\Lenovo\OneDrive - University of Technology Bahrain\Desktop\CineNest\cinenestMYLIST.html">My List</a>
+<div class="user-menu">
+    <div id="activeUserIcon" onclick="toggleDropdown()"></div>
+    <div class="dropdown" id="userDropdown"></div>
+</div>
+        </div>
+    </div>
+    <div class="hero">
+        <div class="hero-bg"></div>
+<div style="position:absolute; top:16px; left:60px; z-index:3;">
+        <a href="javascript:history.back()" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:14px; transition:color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">← Back</a>
+    </div>
+    <div class="movie-container">
+
+        <div class="movie-poster">
+            <img src="C:\Users\Lenovo\Downloads\zooto.jpg" alt="#">
+        </div>
+
+
+        <div class="movie-info">
+            <p class="date"> 2016</p>
+            <h1>Zootopia</h1>
+            <p class="time"> 1h 48min</p>
+            <p class="genre">Genre: Comedy</p>
+            
+        
+            <p>
+When Judy Hopps, a rookie officer in the Zootopia Police Department, sniffs out a sinister plot, she enlists the help of a con artist to solve the case in order to prove her abilities to Chief Bogo.
+            </p>
+
+           
+<button class="add-btn" id="addBtn" onclick="addToList()">+ Add to My List</button>
+  </div>
+    </div>
+    </div>
+
+    <div class="movie-review">
+             <h1>Movie Reviews-</h1></div>
+
+             <div id="userReviews"></div>
+
+
+             <div class="review-box">
+                <p><b><h4>keyan   ⭐️8/10</h4></b><br><br>
+As much as I liked movies like Toy Story and Finding Nemo, it made me curious about other CGI animated movies. I didn't actually see this movie in theaters, but I did rent it and was pleasantly surprised. Not everything is in black and white in this movie, and various stereotypes are broken. And things are not always what they seem. I loved the main characters and they all get my standing ovation. This, along with Wreck-It Ralph and Big Hero 6 are my favorites of the non-Pixar Disney CGI films. If you like anthro animals and want to see them in a somewhat modern setting with no humans, look no further!
+
+                </br> </br></p>
+             </div>
+
+             <div class="review-box">
+                <p><b><h4>emma   ⭐️10/10</h4></b><br><br>
+Zootopia leaves all other Disney 3D animations in the dust. The plot, characters, styling, quality of animation and script are so spot on. I could watch this film a thousand times and not grow bored. If you haven't seen it, stop what you are doing and watch it.
+
+</br> </br></p>
+             </div>
+
+             <div class="review-box">
+                <p><b><h4>senno   ⭐️9/10</h4></b><br><br>
+How can someone not like this masterpiece!
+
+the characters they created are awesome! the world they created is mindblowing! the story is good!
+
+Everything about this movie is just awesome!
+</br> </br></p>
+             </div>
+
+              <div class="review-box">
+                <p><b><h4>chao   ⭐️10/10</h4></b><br><br>
+Zootopia was probably my favorite Disney movie when it first came out, and it's still my favorite even now. It's definitely one of the more mature Disney films. It has some references to other movies and even some shows; there's actually a reference to Breaking Bad in this, and I heard that in the second movie there will be even more references to other media than what this film has. Anyway, the best part of this movie is easily the dynamic between Nick and Judy. When I first watched the movie, I remember liking it because it was the first time a Disney movie actually shocked me with its twist villain, but it seems I completely forgot how good their dynamic was. I'm seeing Zootopia 2 tomorrow, I hope it's at least almost as good as the first film!
+
+</br> </br></p>
+             </div>
+
+             <div class="review-box">
+                <p><b><h4>rast   ⭐️6/10</h4></b><br><br>
+In my opinion Zootopia is one of the best children animations since Rango as it attempts to tell a competent and interesting story instead of just projecting ideas and messages with only leaving stereotypical characters and thin story arcs left.
+</br> </br></p>
+             </div>
+
+             <div class="movie-review">
+    <h1>Leave a Review-</h1>
+</div>
+
+<div class="review-box">
+    <input type="text" id="reviewName" placeholder="Your name" style="width:100% ; padding:10px; border-radius:8px; border:none; margin-bottom:10px; background:rgba(255,255,255,0.15); color:white;"/><br>
+        <select id="reviewRating" style="width:100%; padding:10px; border-radius:8px; border:none; margin-bottom:10px; background:rgba(255,255,255,0.15); color:white;">
+
+            <option value="⭐️1/10">⭐️ 1/10</option>
+            <option value="⭐️2/10">⭐️⭐️ 2/10</option>
+            <option value="⭐️3/10">⭐️⭐️⭐️ 3/10</option>
+            <option value="⭐️4/10">⭐️⭐️⭐️⭐️ 4/10</option>
+            <option value="⭐️5/10">⭐️⭐️⭐️⭐️⭐️ 5/10</option>
+            <option value="⭐️6/10">⭐️⭐️⭐️⭐️⭐️⭐️ 6/10</option>
+            <option value="⭐️7/10">⭐️⭐️⭐️⭐️⭐️⭐️⭐️ 7/10</option>
+            <option value="⭐️8/10">⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️ 8/10</option>
+            <option value="⭐️9/10">⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️ 9/10</option>
+            <option value="⭐️10/10">⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️ 10/10</option>
+            </select><br>
+
+            <textarea id="reviewText" placeholder="Write your review..." rows="4" style="width:100%; padding:10px; border-radius:8px; border:none; background:rgba(255,255,255,0.15); color:white; resize:none;"></textarea><br><br>
+            <button class="add-btn" onclick="submitReview()">Post Review</button>
+</div>
+
+<script>
+    function addToList() {
+        let currentUser = localStorage.getItem("activeUser");
+
+        if (!currentUser) {
+            alert("Please select a profile first!");
+            return;
+        }
+
+        const movie = {
+            title: "Zootopia",
+            poster: "zooto.jpg"
+        };
+
+        let personalLocker = "CineNestList_" + currentUser;
+        const savedData = localStorage.getItem(personalLocker);
+        let movies = savedData ? JSON.parse(savedData) : [];
+
+        if (movies.some(m => m.title === movie.title)) {
+        document.getElementById('addBtn').textContent = '✓ Already in List';
+        document.getElementById('addBtn').classList.add('done');
+        return;
+    }
+
+    movies.push(movie);
+    localStorage.setItem(personalLocker, JSON.stringify(movies));
+    document.getElementById('addBtn').textContent = '✓ Added to List';
+    document.getElementById('addBtn').classList.add('done');
+    document.getElementById('addBtn').disabled = true;
+}
+
+    function submitReview(){
+        const name=document.getElementById('reviewName').value.trim();
+        const rating=document.getElementById('reviewRating').value;
+        const text=document.getElementById('reviewText').value.trim();
+
+        if(!name||!text){
+            alert("Please fill in your name and review!");
+            return;
+        }
+        const saved=localStorage.getItem("reviews_zooto");
+        const reviews=saved ? JSON.parse(saved):[];
+        reviews.push({ name, rating, text });
+    localStorage.setItem("reviews_zooto", JSON.stringify(reviews));
+
+    document.getElementById('reviewName').value = '';
+    document.getElementById('reviewText').value = '';
+
+    loadReviews();
+}
+
+function loadReviews() {
+    const saved = localStorage.getItem("reviews_zooto");
+    const reviews = saved ? JSON.parse(saved) : [];
+    const container = document.getElementById('userReviews');
+    container.innerHTML = '';
+    reviews.forEach(r => {
+        container.innerHTML += `
+            <div class="review-box">
+                <p><b><h4>${r.name}   ${r.rating}</h4></b><br><br>${r.text}</p>
+            </div>
+        `;
+    });
+}
+
+loadReviews();
+function getUsers() {
+    return JSON.parse(localStorage.getItem('cinenest_users') || '[]');
+}
+
+function getActiveUser() {
+    const activeName = localStorage.getItem('activeUser');
+    const users = getUsers();
+    return users.find(u => u.name === activeName) || users[0] || null;
+}
+
+function makeAvatar(user, size) {
+    const img = document.createElement('img');
+    img.src = user.avatar || '';
+    img.alt = user.name;
+    img.style.cssText = `width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;object-position:center 10%;flex-shrink:0;`;
+    return img;
+}
+
+function updateNavbarIcon() {
+    const active = getActiveUser();
+    const container = document.getElementById('activeUserIcon');
+    container.innerHTML = '';
+    container.style.cssText = 'width:40px;height:40px;border-radius:50%;cursor:pointer;border:2px solid white;overflow:hidden;display:flex;align-items:center;justify-content:center;';
+    if (active) container.appendChild(makeAvatar(active, 40));
+}
+
+function buildDropdown() {
+    const users = getUsers();
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.innerHTML = '';
+
+    users.forEach(user => {
+        const item = document.createElement('div');
+        item.className = 'dropdown-item';
+        item.onclick = () => switchUser(user.name);
+        item.appendChild(makeAvatar(user, 35));
+        const label = document.createElement('span');
+        label.textContent = user.name;
+        item.appendChild(label);
+        dropdown.appendChild(item);
+        
+    });
+const manageUsers = document.createElement('div');
+manageUsers.className = 'dropdown-item';
+manageUsers.textContent = '👥 Users';
+manageUsers.onclick = () => window.location.href = 'cineNest.html';
+dropdown.appendChild(manageUsers);
+    const logout = document.createElement('div');
+    logout.className = 'dropdown-item';
+    logout.textContent = 'Logout';
+    logout.onclick = () => {
+        localStorage.removeItem('activeUser');
+        window.location.href = 'cinenestLOGOUT.html';
+    };
+    dropdown.appendChild(logout);
+}
+
+function switchUser(name) {
+    localStorage.setItem('activeUser', name);
+    const users = getUsers();
+    const user = users.find(u => u.name === name);
+    window.location.href = user && user.isChild ? 'cinenestKIDS.html' : 'cineNest.html';
+}
+
+function toggleDropdown() {
+    document.getElementById('userDropdown').classList.toggle('show');
+}
+
+window.addEventListener('click', function(e) {
+    if (!e.target.closest('.user-menu')) {
+        document.getElementById('userDropdown').classList.remove('show');
+    }
+});
+
+window.addEventListener('load', function() {
+    updateNavbarIcon();
+    buildDropdown();
+});
+</script>
+</body>
+</html>

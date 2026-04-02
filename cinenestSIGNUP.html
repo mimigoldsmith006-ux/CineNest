@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up</title>
+    <style>
+        *{
+    box-sizing: border-box;
+}
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+        background:
+        linear-gradient(to right, rgba(179,0,0,0.6), rgba(0,0,0,0.8)),
+        url("movieslide.jpg.jpg");            
+        height:100vh;
+            margin:0;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .signup-box{
+    width:360px;
+    background: rgba(0,0,0,0.85);
+    color:white;
+    padding:25px;
+    border-radius:10px;
+}
+
+        .signup-box h1{
+            text-align:center;
+            margin-bottom:10px;
+        }
+
+        .signup-box p{
+            text-align:center;
+            font-size:14px;
+            margin-bottom:20px;
+        }
+
+        .signup-box input{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border:none;
+    border-radius:5px;
+}
+
+        .signup-box button{
+            width:100%;
+            padding:10px;
+            margin-top:10px;
+            border:none;
+            cursor:pointer;
+        }
+
+        .signupbtn{
+            background:#b30000;
+            color:white;
+        }
+
+        .signupbtn:hover{
+            background:#ff1a1a;
+        }
+
+        .cancelbtn{
+            background:#999;
+            color:white;
+        }
+
+        .cancelbtn:hover{
+            background:#777;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="signup-box">
+        <form>
+            <h1>Sign Up</h1>
+            <p>Create your account</p>
+
+            <input type="text" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+            <input type="password" placeholder="Repeat Password" required>
+
+            <label>
+                <input type="checkbox"> <p style="color:white;">Remember me</p>
+            </label>
+
+            <button type="button" class="cancelbtn">Cancel</button>
+            <button type="submit" class="signupbtn">Sign Up</button>
+        </form>
+    </div>
+
+    <script>
+        document.querySelector("form").addEventListener("submit", function(e){
+            e.preventDefault();
+
+            const email=document.querySelector("input[type='text']").value;
+            const password=document.querySelectorAll("input[type='password']")[0].value;
+            const repeat=document.querySelectorAll("input[type='password']")[1].value;
+
+            if(password!==repeat){
+                alert("Password do not match!");
+                return;
+            }
+            localStorage.setItem("userEmail",email);
+            localStorage.setItem("userPassword",password);
+
+            alert("Account created successfully!");
+
+            window.location.href="cineNest.html";
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+         <title>CineNest</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body{
+            height:100vh;
+            margin:0;
+            background:
+                linear-gradient(to right, rgba(179,0,0,0.6), rgba(0,0,0,0.8)),
+                url("movieslide.jpg.jpg");
+            background-size:cover;
+            background-position:center;
+        }
+
+        .navbar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:20px 60px;
+            background:linear-gradient(to right, #b30000, #4d0000);
+            color:white;
+        }
+
+        .logo{
+            font-size:30px;
+            font-weight:bold;
+        }
+
+
+@media screen and (max-width: 300px) {
+  span.psw {
+    display: block;
+    float: none;
+  }
+  .cancelbtn {
+    width: 100%;
+  }
+}
+
+
+.logout-box{
+    width:360px;
+    background: rgba(0,0,0,0.85);
+    color:white;
+    padding:25px;
+    border-radius:10px;
+    margin:120px auto;
+}
+
+.logout-box h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.logout-box button{
+    width:100%;
+    padding:10px;
+    background:#b30000;
+    color:white;
+    border:none;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+.logout-box button:hover{
+    background:#ff1a1a;
+}
+        </style>
+        </head>
+<body>
+
+
+    <div class="navbar">
+        <div class="logo">CineNest</div>
+    </div>
+<div style="padding: 16px 60px 0;">
+    <a href="javascript:history.back()" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:14px; transition:color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">← Back</a>
+</div>
+<center>
+    <div class="logout-box">
+
+    <form>
+        <button type="button" onclick="logout()">Log out</button>
+        <br></br>
+    </form>
+
+    <script>
+function logout() {
+    localStorage.removeItem("activeUser");
+    window.location.href = "cinenestLOGIN.html";
+}
+</script>
+</div>
+    </center>
+    </body>

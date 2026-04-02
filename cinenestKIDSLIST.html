@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CineNest - My List</title>
+    <style>
+        *{ margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+        body{ min-height:100vh; background: linear-gradient(to bottom, #ccdef8 40%, #fdbcc5 50%, rgb(254, 254, 194)100%); color:rgb(95, 15, 15);  }
+        .navbar{ display:flex; justify-content:space-between; align-items:center; padding:20px 60px; background: linear-gradient(to right,rgb(253, 253, 222) 40%, #fdbcc5 50%, #ccdef8 100%); }
+        .logo{ font-size:30px; font-weight:bold; }
+        .nav-links a{ color: rgb(95, 15, 15, 0.8); text-decoration:none; font-size:16px; transition: color 0.2s;
+ }
+        .nav-links a:hover { 
+    color: rgb(95, 15, 15);
+}
+        
+        #movieList {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 50px;
+            gap: 30px;
+        }
+        .navbar{ 
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center; 
+    padding:20px 60px; 
+    background: linear-gradient(to right,rgb(253, 253, 222) 40%, #fdbcc5 50%, #ccdef8 100%); 
+    color: rgb(95, 15, 15); 
+    position:sticky; 
+    top:0; 
+    z-index:999; 
+}
+
+        .movie-card {
+            background: rgba(255, 255, 255, 0.4);
+    color: rgb(74, 0, 46);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            width: 220px;
+        }
+
+        .movie-card img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .remove-btn {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.user-menu {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 30px;
+}
+
+#activeUserIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgb(95, 15, 15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#activeUserIcon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    min-width: 160px;
+    z-index: 1000;
+}
+
+.dropdown.show { 
+    display: block; 
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.dropdown-item:last-child {
+    margin-top: 5px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+
+.dropdown-item:hover { 
+    background: #eee; 
+}
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+    <div class="logo">CineNest</div>
+    <div class="nav-links">
+        <a href="cineNestKIDS.html">Home</a>
+        <a href="cinenestKIDSLIST.html">My List</a>
+
+        <div class="user-menu">
+            <div id="activeUserIcon" onclick="toggleDropdown()"></div>
+            <div class="dropdown" id="userDropdown"></div>
+        </div>
+    </div>
+</div>
+<div style="padding: 16px 60px 0;">
+    <a href="javascript:history.back()" style="color:rgba(83, 10, 66, 0.5); text-decoration:none; font-size:14px; transition:color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">← Back</a>
+
+<h1 style="text-align:center; margin-top:30px; color: rgb(74, 0, 46);">My Personal List</h1>
+    <div id="movieList"></div>
+
+<script>
+    function loadMyList() {
+        const listContainer = document.getElementById('movieList');
+        let currentUser = localStorage.getItem("activeUser");
+
+        if (!currentUser) {
+            listContainer.innerHTML = "<h2 style='color: rgb(74, 0, 46); text-align:center;'>Please select a profile first.</h2>";
+            return;
+        }
+
+        let personalLocker = "CineNestList_" + currentUser;
+        const savedData = localStorage.getItem(personalLocker);
+        const movies = savedData ? JSON.parse(savedData) : [];
+
+        listContainer.innerHTML = "";
+
+        if (movies.length === 0) {
+            listContainer.innerHTML = "<h2 style='color:rgb(74, 0, 46); text-align:center;'>" + currentUser + ", your list is currently empty.</h2>";
+            return;
+        }
+
+        movies.forEach((movie, index) => {
+            listContainer.innerHTML += `
+                <div class="movie-card" style="display:inline-block; margin:20px; color:rgb(74, 0, 46); text-align:center;">
+                    <img src="${movie.poster}" style="width:200px; border-radius:10px;">
+                    <h3>${movie.title}</h3>
+                    <button onclick="removeItem(${index})" style="background:red; color:white; cursor:pointer; padding:5px 10px; border:none; border-radius:5px;">Remove</button>
+                </div>
+            `;
+        });
+    }
+
+    function removeItem(index) {
+    let currentUser = localStorage.getItem("activeUser");
+    if (!currentUser) return;
+
+    let personalLocker = "CineNestList_" + currentUser;
+    const savedData = localStorage.getItem(personalLocker);
+    let movies = savedData ? JSON.parse(savedData) : [];
+    movies.splice(index, 1);
+    localStorage.setItem(personalLocker, JSON.stringify(movies)); 
+    loadMyList();
+}
+
+    loadMyList();
+function getUsers() {
+    return JSON.parse(localStorage.getItem('cinenest_users') || '[]');
+}
+
+function getActiveUser() {
+    const activeName = localStorage.getItem('activeUser');
+    const users = getUsers();
+    return users.find(u => u.name === activeName) || users[0] || null;
+}
+
+function makeAvatar(user, size) {
+    const img = document.createElement('img');
+    img.src = user.avatar || '';
+    img.alt = user.name;
+    img.style.width = size + "px";
+    img.style.height = size + "px";
+    img.style.borderRadius = "50%";
+    img.style.objectFit = "cover";
+    return img;
+}
+
+function updateNavbarIcon() {
+    const active = getActiveUser();
+    const container = document.getElementById('activeUserIcon');
+    container.innerHTML = '';
+    if (active) container.appendChild(makeAvatar(active, 36));
+}
+
+function buildDropdown() {
+    const users = getUsers();
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.innerHTML = '';
+
+    users.forEach(user => {
+        const item = document.createElement('div');
+        item.className = 'dropdown-item';
+        item.onclick = () => switchUser(user.name);
+        item.appendChild(makeAvatar(user, 35));
+        const label = document.createElement('span');
+        label.textContent = user.name;
+        label.style.marginLeft = '10px';
+        item.appendChild(label);
+        dropdown.appendChild(item);
+    });
+
+    const manageUsers = document.createElement('div');
+    manageUsers.className = 'dropdown-item';
+    manageUsers.textContent = '👥 Users';
+    manageUsers.onclick = () => window.location.href = 'cineNest.html';
+    dropdown.appendChild(manageUsers);
+
+    const logout = document.createElement('div');
+    logout.className = 'dropdown-item';
+    logout.textContent = 'Logout';
+    logout.onclick = () => {
+        localStorage.removeItem('activeUser');
+        window.location.href = "cinenestLOGOUT.html";
+    };
+    dropdown.appendChild(logout);
+}
+
+function switchUser(name) {
+    localStorage.setItem('activeUser', name);
+    const users = getUsers();
+    const user = users.find(u => u.name === name);
+    window.location.href = user && user.isChild ? 'cinenestKIDS.html' : 'cinenestMAIN.html';
+}
+
+function toggleDropdown() {
+    document.getElementById('userDropdown').classList.toggle('show');
+}
+
+window.addEventListener('click', function(e) {
+    if (!e.target.closest('.user-menu')) {
+        document.getElementById('userDropdown').classList.remove('show');
+    }
+});
+
+window.onload = function() {
+    updateNavbarIcon();
+    buildDropdown();
+    loadMyList(); // keep your existing list loader
+};
+</script>
+
+</body>
+</html>
