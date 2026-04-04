@@ -311,11 +311,22 @@
         
         const EMOJIS = ['🦁','🐼','🐸','🦊','🐙','🐧','🦋','🐲','🌟','🎃','🤖','👽'];
 
-        let users = JSON.parse(localStorage.getItem('cinenest_users') || 'null') || [
-            { id: 1, name: 'User 1', age: null, isChild: false, avatar: 'C:\\Users\\Lenovo\\Downloads\\nick.jpg', href: 'cinenestMAIN.html' },
-            { id: 2, name: 'User 2', age: null, isChild: false, avatar: 'C:\\Users\\Lenovo\\Downloads\\#powerpuff #powerpuffgirls #bubbles #sensitive #blonde #blondeaesthetic.jpg', href: 'cinenestMAIN.html' },
-            { id: 3, name: 'User 3', age: null, isChild: false, avatar: 'C:\\Users\\Lenovo\\Downloads\\Here goes my haiiirrr!.jpg', href: 'cinenestMAIN.html' },
-        ];
+       function makeEmojiAvatar(emoji, hue) {
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = 160;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = `hsl(${hue}, 40%, 18%)`;
+    ctx.fillRect(0, 0, 160, 160);
+    ctx.font = '90px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(emoji, 80, 85);
+    return canvas.toDataURL();
+}
+
+let users = JSON.parse(localStorage.getItem('cinenest_users') || 'null') || [
+    { id: 1, name: 'User 1', age: null, isChild: false, avatar: makeEmojiAvatar('🦁', 30), href: 'cinenestMAIN.html' },
+    { id: 2, name: 'User 2', age: null, isChild: false, avatar: makeEmojiAvatar('🐼', 200), href: 'cinenestMAIN.html' },
+    { id: 3, name: 'User 3', age: null, isChild: false, avatar: makeEmojiAvatar('🦊', 20), href: 'cinenestMAIN.html' },
+];
 
         let editingId = null;
 
