@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CineNest</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body{
+            height:100vh;
+            margin:0;
+            background:
+                linear-gradient(to right, rgba(179,0,0,0.6), rgba(0,0,0,0.8)),
+                url("chairs.jpg");
+            background-size:cover;
+            background-position:center;
+        }
+
+        .navbar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:20px 60px;
+            background:linear-gradient(to right, #b30000, #4d0000);
+            color:white;
+        }
+
+        .logo{
+            font-size:30px;
+            font-weight:bold;
+        }
+
+        .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-links a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover { 
+    color: white; 
+}
+
+        .users{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            gap:120px;
+            margin-top:100px;
+        }
+
+        .user{
+            text-align:center;
+            color:white;
+        }
+
+        .user img{
+            width:180px;
+            height:180px;
+            border-radius:50%;
+            object-fit:cover;
+            object-position: center 10%;
+            transition:0.3s;
+        }
+
+        .user img:hover{
+            transform:scale(1.05);
+            border:4px solid white;
+        }
+
+        .user p{
+            margin-top:15px;
+            font-size:22px;
+            font-weight:bold;
+        }
+        
+        .hero{
+            text-align:center;
+            color:white;
+            margin-top:100px;
+        }
+
+        .hero h1{
+            font-size:40px;
+            font-weight:500;
+        }
+
+        .user {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .edit-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.55);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.25s;
+            pointer-events: none;
+        }
+        .user:hover .edit-overlay { opacity: 1; }
+        .edit-overlay span { font-size: 24px; }
+        .edit-overlay small {
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 1.5px; color: #fff;
+        }
+
+        .child-badge {
+            position: absolute;
+            top: 4px; right: 4px;
+            background: #ffd700;
+            color: #000;
+            font-size: 10px; font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        .modal-backdrop {
+            position: fixed; inset: 0; z-index: 100;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(6px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .modal-backdrop.open { opacity: 1; pointer-events: all; }
+        .modal {
+            background: #1a1a1a;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 36px 40px;
+            width: 400px; max-width: 95vw;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .modal-backdrop.open .modal { transform: translateY(0); }
+        .modal-close {
+            position: absolute; top: 16px; right: 20px;
+            background: none; border: none;
+            color: rgba(255,255,255,0.4); font-size: 20px; cursor: pointer;
+        }
+        .modal-close:hover { color: white; }
+        .modal h2 { font-size: 22px; margin-bottom: 24px; }
+
+        .modal-avatar-row {
+            display: flex; align-items: center; gap: 18px;
+            margin-bottom: 24px;
+        }
+        .modal-avatar-row img {
+            width: 80px; height: 80px;
+            border-radius: 50%; object-fit: cover;
+            border: 2px solid rgba(255,255,255,0.15);
+        }
+        .avatar-btns { display: flex; flex-direction: column; gap: 8px; }
+        .btn-sm {
+            background: none;
+            border: 1.5px solid rgba(255,255,255,0.2);
+            color: #ccc; padding: 7px 14px;
+            border-radius: 8px; font-size: 13px;
+            font-weight: 700; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-sm:hover { border-color: #ff4444; color: #ff4444; }
+
+        .modal label {
+            display: block; font-size: 11px;
+            font-weight: 700; letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase; margin-bottom: 7px;
+        }
+        .modal input[type="text"],
+        .modal input[type="number"] {
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 1.5px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 11px 14px;
+            color: white; font-size: 15px;
+            outline: none; margin-bottom: 16px;
+            transition: border-color 0.2s;
+        }
+        .modal input:focus { border-color: #b30000; }
+
+        .age-notice {
+            background: rgba(255,215,0,0.1);
+            border: 1.5px solid rgba(255,215,0,0.35);
+            border-radius: 10px;
+            padding: 11px 14px;
+            font-size: 13px; color: #ffd700;
+            font-weight: 700; margin-bottom: 16px;
+            display: none;
+        }
+        .age-notice.visible { display: block; }
+
+        .modal-footer { display: flex; gap: 10px; margin-top: 8px; }
+        .btn-primary {
+            flex: 1; background: linear-gradient(to right, #b30000, #ff4444);
+            border: none; color: white; padding: 12px;
+            border-radius: 10px; font-size: 15px;
+            font-weight: 700; cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn-primary:hover { opacity: 0.85; }
+        .btn-danger {
+            background: rgba(255,50,50,0.1);
+            border: 1.5px solid rgba(255,50,50,0.3);
+            color: #ff6666; padding: 12px 16px;
+            border-radius: 10px; font-size: 14px;
+            font-weight: 700; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-danger:hover { background: rgba(255,50,50,0.2); }
+
+        #childOverlay {
+            position: fixed; inset: 0; z-index: 200;
+            background: #0a1628;
+            display: none; flex-direction: column;
+            align-items: center; justify-content: center; gap: 16px;
+        }
+        #childOverlay.show { display: flex; }
+        #childOverlay h1 {
+            font-size: 56px; font-weight: bold;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        #childOverlay p { font-size: 18px; color: rgba(255,255,255,0.6); }
+        .child-enter-btn {
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            border: none; color: #000;
+            padding: 14px 44px; border-radius: 50px;
+            font-size: 18px; font-weight: 800; cursor: pointer;
+            margin-top: 10px; transition: transform 0.2s;
+        }
+        .child-enter-btn:hover { transform: scale(1.05); }
+        .child-back {
+            background: none; border: none;
+            color: rgba(255,255,255,0.3); font-size: 13px;
+            cursor: pointer; text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="logo">CineNest</div>
+        <div class="nav-links">
+            <a href="cinenestContact.html">Contact Us</a>
+            <a href="cinenestLOGOUT.html">Logout</a>
+        </div>
+    </div>
+
+    <div class="hero">
+        <h1>Your Movies. Organized.</h1>
+    </div>
+
+    <div class="users" id="usersGrid"></div>
+
+    <div class="modal-backdrop" id="modalBackdrop">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <h2 id="modalTitle">Edit Profile</h2>
+            <div class="modal-avatar-row">
+                <img id="modalAvatar" src="" alt="avatar"/>
+                <div class="avatar-btns">
+                    <button class="btn-sm" onclick="document.getElementById('fileInput').click()">📁 Upload Photo</button>
+                    <button class="btn-sm" onclick="pickEmoji()">🎭 Random Emoji</button>
+                </div>
+            </div>
+            <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleUpload(event)"/>
+            <label>Display Name</label>
+            <input type="text" id="modalName" placeholder="Enter name…" maxlength="20"/>
+            <label>Age</label>
+            <input type="number" id="modalAge" placeholder="e.g. 9" min="1" max="120" oninput="checkAge()"/>
+            <div class="age-notice" id="ageNotice">⭐ Under 12 — Kids Mode will activate for this profile!</div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="saveProfile()">Save</button>
+                <button class="btn-danger" onclick="deleteProfile()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="childOverlay">
+        <div style="font-size:48px">⭐🎬⭐</div>
+        <h1>CineNest Kids</h1>
+        <p>A safe, fun place just for you!</p>
+        <button class="child-enter-btn" onclick="window.location.href='cinenestKIDS.html'">🍿 Start Watching!</button>
+        <button class="child-back" onclick="document.getElementById('childOverlay').classList.remove('show')">← Go back</button>
+    </div>
+
+    <script>
+        
+        const EMOJIS = ['🦁','🐼','🐸','🦊','🐙','🐧','🦋','🐲','🌟','🎃','🤖','👽'];
+
+        let users = JSON.parse(localStorage.getItem('cinenest_users') || 'null') || [
+            { id: 1, name: 'User 1', age: null, isChild: false, avatar: 'C:\\Users\\Lenovo\\Downloads\\nick wilde🤍.jpg', href: 'cinenestMAIN.html' },
+            { id: 2, name: 'User 2', age: null, isChild: false, avatar: 'C:\\Users\\Lenovo\\Downloads\\download (6).jpg', href: 'cinenestMAIN.html' },
+            { id: 3, name: 'User 3', age: null, isChild: false, avatar: 'C:\\Users\\Lenovo\\Downloads\\Here goes my haiiirrr!.jpg', href: 'cinenestMAIN.html' },
+        ];
+
+        let editingId = null;
+
+        function save() { localStorage.setItem('cinenest_users', JSON.stringify(users)); }
+
+        function render() {
+            const grid = document.getElementById('usersGrid');
+            grid.innerHTML = '';
+            users.forEach(user => {
+                const div = document.createElement('div');
+                div.className = 'user';
+                div.style.position = 'relative';
+                div.innerHTML = `
+<div class="avatar-wrap" style="position:relative;display:block">
+            <img src="${user.avatar}" alt="${user.name}" style="width:180px;height:180px;border-radius:50%;object-fit:cover;object-position:center 10%;transition:0.3s;display:block"/>
+        ${user.isChild ? '<div class="child-badge">KIDS</div>' : ''}
+    </div>
+    <button onclick="openModal(${user.id})" style="margin-top:10px;background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.25);color:white;padding:6px 18px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px;transition:all 0.2s;" onmouseover="this.style.background='rgba(179,0,0,0.6)';this.style.borderColor='#ff4444'" onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.borderColor='rgba(255,255,255,0.25)'">✏️ EDIT</button>
+    <p style="margin-top:10px;font-size:22px;font-weight:bold;color:white;text-align:center">${user.name}</p>
+`;
+                div.querySelector('img').addEventListener('click', () => selectUser(user));
+                div.addEventListener('dblclick', (e) => { e.preventDefault(); openModal(user.id); });
+                grid.appendChild(div);
+            });
+        }
+
+        function selectUser(user) {
+    localStorage.setItem("activeUser", user.name);
+    if (user.isChild) {
+        document.getElementById('childOverlay').classList.add('show');
+    } else {
+        window.location.href = 'cinenestMAIN.html';
+    }
+}
+
+        function openModal(id) {
+            editingId = id;
+            const user = users.find(u => u.id === id);
+            document.getElementById('modalTitle').textContent = 'Edit Profile';
+            document.getElementById('modalAvatar').src = user.avatar;
+            document.getElementById('modalName').value = user.name;
+            document.getElementById('modalAge').value = user.age || '';
+            document.getElementById('ageNotice').classList.toggle('visible', user.isChild);
+            document.getElementById('modalBackdrop').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('modalBackdrop').classList.remove('open');
+            editingId = null;
+        }
+
+        document.getElementById('modalBackdrop').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        function checkAge() {
+            const age = parseInt(document.getElementById('modalAge').value);
+            document.getElementById('ageNotice').classList.toggle('visible', !isNaN(age) && age < 12);
+        }
+
+        function saveProfile() {
+            const name = document.getElementById('modalName').value.trim() || 'User';
+            const age = parseInt(document.getElementById('modalAge').value) || null;
+            const avatar = document.getElementById('modalAvatar').src;
+            const user = users.find(u => u.id === editingId);
+            Object.assign(user, { name, age, avatar, isChild: age !== null && age < 12 });
+            save(); render(); closeModal();
+        }
+
+        function deleteProfile() {
+            if (users.length <= 1) return alert('You need at least one profile!');
+            users = users.filter(u => u.id !== editingId);
+            save(); render(); closeModal();
+        }
+
+        function handleUpload(e) {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => document.getElementById('modalAvatar').src = ev.target.result;
+            reader.readAsDataURL(file);
+            e.target.value = '';
+        }
+
+        function pickEmoji() {
+            const emoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+            const canvas = document.createElement('canvas');
+            canvas.width = canvas.height = 160;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = `hsl(${Math.floor(Math.random()*360)}, 40%, 18%)`;
+            ctx.fillRect(0, 0, 160, 160);
+            ctx.font = '90px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText(emoji, 80, 85);
+            document.getElementById('modalAvatar').src = canvas.toDataURL();
+        }
+
+        render();
+    </script>
+
+</body>
+</html>
